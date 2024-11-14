@@ -10,8 +10,10 @@ int tongcacso(int n){
 int main(){
 	
 	int n;
-	printf("Nhap n de tinh tong tu 1 den n:\n");
-	scanf("%d", &n);
+	Do{
+		printf("Nhap n de tinh tong tu 1 den n:\n");
+		scanf("%d", &n);
+	} while (n<=0);
 	int ketqua=tongcacso(n);
 	printf("tong tu 1 den %d la :%d\n",n,ketqua);
 	return 0;
