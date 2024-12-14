@@ -1,14 +1,14 @@
 
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 struct NGAY_THANG{
 	int ngay;
 	int thang;
 	int nam;
 };
-
+typedef struct NGAY_THANG ngaysinh;
 struct MON_HOC{
 	char mamon[10];
 	float diem;
@@ -21,37 +21,38 @@ struct SINH_VIEN{
 	MON_HOC monhoc[10];
 } ;
 typedef struct SINH_VIEN sv;
-
-void nhap(SINH_VIEN *sv);
 void xuat(SINH_VIEN sv);
-void nhapnsv(SINH_VIEN *sv);
-void timSVmssv(SINH_VIEN *ds, int n, char mssv);
+void nhapnsv(SINH_VIEN *ds, int n);
+void xuatnsv(SINH_VIEN *ds, int n);
+void giaiPhongSinhVien(SINH_VIEN *ds);
+SINH_VIEN *timsvMSSV(SINH_VIEN*ds, int n, const char *mssv);
+
 int main()
 {
-	SINH_VIEN sv;
 	
-	nhap(&sv);
+	int n;
 	
-	printf("\nThong tin vua nhap la: \n");
-	xuat(sv);
+	SINH_VIEN *danh_sach = (SINH_VIEN *)malloc(n * sizeof(SINH_VIEN));
+	nhapnsv(danh_sach, n);
+	xuatnsv(danh_sach,n);
 	
-	nhapnsv(&sv);
-	
-	char mssv_tim[10];
+	char mssv_tim[15];
     printf("\nNhap MSSV can tim: ");
     scanf("%s", mssv_tim);
 
-    SINH_VIEN *ket_qua = timSVmssv(danh_sach, so_luong, mssv_tim);
-    if (ket_qua != NULL) {
-        printf("\nThong tin sinh vien tim thay:\n");
-        xuat(ket_qua);
+    SINH_VIEN *sv_tim_duoc = timsvMSSV(danh_sach, n, mssv_tim);
+    if (sv_tim_duoc != NULL) {
+        printf("\n=== Sinh vien tim thay ===\n");
+        xuat(*sv_tim_duoc);
     } else {
-        printf("\nKhong tim thay sinh vien co MSSV %s.\n", mssv_tim);
+        printf("\nKhong tim thay sinh vien voi MSSV: %s\n", mssv_tim);
     }
 
-    for (int i = 0; i < so_luong; i++) {
-        free(danh_sach[i].mon_hoc);
+    // Giai phong bo nho cap phat dong
+    for (int i = 0; i < n; i++) {
+        giaiPhongSinhVien(&danh_sach[i]);
     }
+    
     free(danh_sach);
 
 	return 0;
@@ -59,7 +60,7 @@ int main()
 
 void xuat(SINH_VIEN sv)
 {
-	printf("%s\t%s\t%s\t%s\t%d\t%d\t", sv.hoten, sv.mssv, sv.diachi, sv.gioitinh, sv.ngaysinh, sv.somon);
+	printf("%s\t%s\t%s\t%s\t%d%d%d\t%d\t", sv.hoten, sv.mssv, sv.diachi, sv.gioitinh, sv.ngaysinh.ngay, sv.ngaysinh.thang, sv.ngaysinh.nam ,  sv.somon);
 	for(int i=0; i<sv.somon; i++){
 		printf("Ma mon: %s\n Diem: %f", sv.monhoc[i].mamon, sv.monhoc[i].diem);
 	}
@@ -100,26 +101,29 @@ void nhap(SINH_VIEN *sv)
 		scanf("%f",&sv->monhoc[i].diem);
 	}
 }
-void nhapnsv(SINH_VIEN *ds, int *n){
-		int n;
+void giaiPhongSinhVien(SINH_VIEN *sv) {
+    free(sv->monhoc);
+}
+void nhapnsv(SINH_VIEN *ds, int n){
 	printf("\nnhap so luong sinh vien: ");
 	scanf("%d",&n);
-	*ds=(SINH_VIEN*)malloc((*n)*sizeof(SINH_VIEN));
-	for(int i=0; i<*n;i++){
+	for(int i=0; i<n;i++){
 		printf("\nnhap thong tin sinh vien thu %d: ",i+1);
-		nhap(&(*ds)[i]);
-	}
-	printf("\n THong tin danh sach sinh vien");
-	for(int i=0; i<n; i++){
-		printf("\nSinh vien thu %d: ",i+1);
-		xuat(&ds[i])	;
+		nhap(&ds[i]);
 	}
 }
-void timSVmssv(SINH_VIEN*ds, int n, char *mssv){
-	for(int i=0;i<n;i++){
-		if(strcmp(ds[i].mssv, mssv)==0){
-			return (SINH_VIEN*)&ds[i];
-		}
+void xuatnsv(SINH_VIEN *ds, int n){
+	printf	("\n THong tin danh sach sinh vien");
+	for(int i=0; i<n; i++){
+		printf("\nSinh vien thu %d: ",i+1);
+		xuat(ds[i])	;
 	}
-	return NULL;
+}
+SINH_VIEN *timsvMSSV(SINH_VIEN *ds, int n, const char *mssv) {
+    for (int i = 0; i < n; i++) {
+        if (strcmp(ds[i].mssv, mssv) == 0) {
+            return &ds[i]; 
+        }
+    }
+    return NULL; // Khong tim thay
 }
