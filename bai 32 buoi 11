@@ -21,26 +21,40 @@ void nhapSP(SP*);
 void xuatSP(SP*);
 void nhapDSSP(SP*, int);
 void xuatDSSP(SP*, int);
-
+void ghiDSSP(SP *list, int n, const char *path);
 
 int main()
 {
 	SP * a;
 	int n;
-		
+	printf("\nnhap so luong san pham: ");
+	scanf("%d",&n);
 	a = (SP*)malloc(sizeof(SP)*n);
+	
 	nhapDSSP(a,n);
 	
-	printf("\nDanh sach cac san pham vua doc:\n");
-	xuatDSSP(a,n);
+	char path[100];
+	printf("\nNhap duong dan tap tin de luu du lieu: ");
+	fflush(stdin);
+	gets(path);
+
+	FILE *fp = fopen(path, "wb");
+    if (fp == NULL) {
+        printf("\nLoi mo file de ghi du lieu!\n");
+    }
+    else{
+    	fwrite(a, sizeof(SP), n, fp);
+    	fclose(fp);
+    	printf("\nDa ghi danh sach san pham vao file \"%s\".\n", path);
+	}
+		
 	free(a);
 	return 0;
 }
 
 void nhapDSSP(SP* list, int n)
 {
-	printf("\nnhap so luong san pham: ");
-	scanf("%d",&n);
+
 	int i;
 	for(i = 0; i<n; i++)
 	{
