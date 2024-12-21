@@ -16,11 +16,8 @@ struct SAN_PHAM
 typedef struct SAN_PHAM SP;
 
 void nhapNgay(NGAY *);
-void xuatNgay(NGAY *);
 void nhapSP(SP*);
-void xuatSP(SP*);
 void nhapDSSP(SP*, int);
-void xuatDSSP(SP*, int);
 void ghiDSSP(SP *list, int n, const char *path);
 
 int main()
@@ -62,16 +59,6 @@ void nhapDSSP(SP* list, int n)
 		nhapSP(list+i);
 	}
 }
-void xuatDSSP(SP* list, int n )
-{
-	int i;
-	for(i = 0; i<n; i++)
-	{
-		xuatSP(list+i);
-		printf("\n");
-	}
-}
-
 
 void nhapSP(SP*sp)
 {
@@ -92,13 +79,6 @@ void nhapSP(SP*sp)
 	printf("\nNhap ngay san xuat:");
 	nhapNgay(&sp->ngaysx);
 }
-void xuatSP(SP*sp)
-{
-	printf("\n%s\t%s\t%.1f\t%.1f\t",sp->ma, sp->ten, sp->dongia, sp->hansd);
-	xuatNgay(&sp->ngaysx);
-}
-
-
 
 void nhapNgay(NGAY *d)
 {
@@ -110,9 +90,4 @@ void nhapNgay(NGAY *d)
 	
 	printf("\nNhap nam: ");
 	scanf("%d", &d->nam);
-}
-
-void xuatNgay(NGAY *d)
-{
-	printf("%d/%d/%d", d->ngay, d->thang, d->nam);
 }
