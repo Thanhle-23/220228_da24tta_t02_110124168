@@ -1,93 +1,73 @@
-#include<stdio.h>
-#include<stdlib.h>
+// Chuong trinh nhap san pham va ghi vao tep
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-struct NGAY_THANG
-{
-	int ngay, thang, nam;	
-};
-typedef struct NGAY_THANG NGAY;
 
-struct SAN_PHAM
-{
-	char ma[10]	, ten[100];
-	NGAY ngaysx;
-	float dongia, hansd;
-};
-typedef struct SAN_PHAM SP;
+typedef struct {
+    int ngay;
+    int thang;
+    int nam;
+} NGAY_THANG;
 
-void nhapNgay(NGAY *);
-void nhapSP(SP*);
-void nhapDSSP(SP*, int);
-void ghiDSSP(SP *list, int n, const char *path);
+typedef struct {
+    char maSanPham[20];
+    char tenSanPham[50];
+    float donGia;
+    NGAY_THANG ngaySanXuat;
+    float thoiGianSuDung;
+} SAN_PHAM;
 
-int main()
-{
-	SP * a;
-	int n;
-	printf("\nnhap so luong san pham: ");
-	scanf("%d",&n);
-	a = (SP*)malloc(sizeof(SP)*n);
-	
-	nhapDSSP(a,n);
-	
-	char path[100];
-	printf("\nNhap duong dan tap tin de luu du lieu: ");
-	fflush(stdin);
-	gets(path);
+void nhapSanPham(SAN_PHAM *sp) {
+    printf("Nhap ma san pham: ");
+    scanf("%s", sp->maSanPham);
+    printf("Nhap ten san pham: ");
+    scanf(" %s", sp->tenSanPham);
+    printf("Nhap don gia: ");
+    scanf("%f", &sp->donGia);
+    printf("Nhap ngay san xuat (ngay thang nam): ");
+    scanf("%d %d %d", &sp->ngaySanXuat.ngay, &sp->ngaySanXuat.thang, &sp->ngaySanXuat.nam);
+    printf("Nhap thoi gian su dung (nam): ");
+    scanf("%f", &sp->thoiGianSuDung);
+}
 
-	FILE *fp = fopen(path, "wb");
-    if (fp == NULL) {
-        printf("\nLoi mo file de ghi du lieu!\n");
+void ghiDanhSachSanPham(SAN_PHAM *ds, int n, const char *tenTep) {
+    FILE *file = fopen(tenTep, "wb");
+    if (file == NULL) {
+        printf("Khong the mo tep %s de ghi!\n", tenTep);
+        return;
     }
-    else{
-    	fwrite(a, sizeof(SP), n, fp);
-    	fclose(fp);
-    	printf("\nDa ghi danh sach san pham vao file \"%s\".\n", path);
-	}
-		
-	free(a);
-	return 0;
+    fwrite(ds, sizeof(SAN_PHAM), n, file);
+    fclose(file);
+    printf("Da ghi danh sach san pham vao tep %s.\n", tenTep);
 }
 
-void nhapDSSP(SP* list, int n)
-{
+int main() {
+    int n;
+    char tenTep[100];
 
-	int i;
-	for(i = 0; i<n; i++)
-	{
-		printf("\nNhap thong tin san pham tai vi tri %d: ", i);
-		nhapSP(list+i);
-	}
-}
+    printf("Nhap so luong san pham: ");
+    scanf("%d", &n);
 
-void nhapSP(SP*sp)
-{
-	printf("\nNhap ma san pham:");
-	fflush(stdin);
-	scanf("%s", sp->ma);
-	
-	printf("\nNhap ten san pham:");
-	fflush(stdin);
-	gets(sp->ten);
-	
-	printf("\nNhap don gia san pham:");
-	scanf("%f", &sp->dongia);
-	
-	printf("\nNhap han su dung:");
-	scanf("%f", &sp->hansd);
-	
-	printf("\nNhap ngay san xuat:");
-	nhapNgay(&sp->ngaysx);
-}
+    if (n <= 0) {
+        printf("So luong san pham phai lon hon 0!\n");
+        return 1;
+    }
 
-void nhapNgay(NGAY *d)
-{
-	printf("\nNhap ngay: ");
-	scanf("%d", &d->ngay);
-	
-	printf("\nNhap thang: ");
-	scanf("%d", &d->thang);
-	
-	printf("\nNhap nam: ");
-	scanf("%d", &d->nam);
+    SAN_PHAM *ds = (SAN_PHAM *)malloc(n * sizeof(SAN_PHAM));
+    if (ds == NULL) {
+        printf("Khong the cap phat bo nho!\n");
+        return 1;
+    }
+
+    for (int i = 0; i < n; i++) {
+        printf("\nNhap thong tin san pham thu %d:\n", i + 1);
+        nhapSanPham(&ds[i]);
+    }
+
+    printf("Nhap ten tep de luu danh sach san pham: ");
+    scanf("%s", tenTep);
+    ghiDanhSachSanPham(ds, n, tenTep);
+
+    free(ds);
+    return 0;
 }
