@@ -1,14 +1,15 @@
-// Chuong trinh hien thi va tim kiem san pham
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+// C?u trúc ngày tháng
 typedef struct {
     int ngay;
     int thang;
     int nam;
 } NGAY_THANG;
 
+// C?u trúc s?n ph?m
 typedef struct {
     char maSanPham[20];
     char tenSanPham[50];
@@ -16,43 +17,84 @@ typedef struct {
     NGAY_THANG ngaySanXuat;
     float thoiGianSuDung;
 } SAN_PHAM;
-void hienThiSanPham(SAN_PHAM sp){
-	printf("Ma SP: %s\nTen SP: %s\nDon Gia: %.2f\nNgay SX: %02d/%02d/%04d\nThoi Gian SD: %.2f\n",
-                   sp.maSanPham, sp.tenSanPham, sp.donGia,
-                   sp.ngaySanXuat.ngay, sp.ngaySanXuat.thang, sp.ngaySanXuat.nam,
-                   sp.thoiGianSuDung);
-}
-void hienThiDanhSachSanPham(const char *tenTep) {
+
+// Hàm d?c danh sách s?n ph?m t? t?p
+SAN_PHAM *docDanhSachSanPham(const char *tenTep, int *soLuong) {
     FILE *file = fopen(tenTep, "rb");
     if (file == NULL) {
         printf("Khong the mo tep %s de doc!\n", tenTep);
-        return;
+        *soLuong = 0;
+        return NULL;
     }
 
-    SAN_PHAM sp;
-    printf("%-20s %-50s %-10s %-15s %-20s\n", "Ma SP", "Ten SP", "Don Gia", "Ngay SX", "Thoi Gian SD");
-    while (fread(&sp, sizeof(SAN_PHAM), 1, file)) {
-        printf("%-20s %-50s %-10.2f %02d/%02d/%04d %-20.2f\n",
-               sp.maSanPham, sp.tenSanPham, sp.donGia,
-               sp.ngaySanXuat.ngay, sp.ngaySanXuat.thang, sp.ngaySanXuat.nam,
-               sp.thoiGianSuDung);
+    // Tính s? lu?ng s?n ph?m trong t?p
+    fseek(file, 0, SEEK_END);
+    int fileSize = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    *soLuong = fileSize / sizeof(SAN_PHAM);
+
+    if (*soLuong <= 0) {
+        printf("Tep khong co san pham nao.\n");
+        fclose(file);
+        return NULL;
     }
+
+    // C?p phát b? nh? cho danh sách s?n ph?m
+    SAN_PHAM *ds = (SAN_PHAM *)malloc(*soLuong * sizeof(SAN_PHAM));
+    if (ds == NULL) {
+        printf("Khong du bo nho de cap phat cho danh sach san pham.\n");
+        fclose(file);
+        *soLuong = 0;
+        return NULL;
+    }
+
+    // Ð?c danh sách s?n ph?m t? t?p
+    fread(ds, sizeof(SAN_PHAM), *soLuong, file);
     fclose(file);
+    return ds;
 }
 
-void timKiemSanPhamTheoMa(const char *tenTep, const char *maSP) {
-    FILE *file = fopen(tenTep, "rb");
-    if (file == NULL) {
-        printf("Khong the mo tep %s de doc!\n", tenTep);
+// Hàm hi?n th? thông tin s?n ph?m
+void hienThiSanPham(const SAN_PHAM *sp) {
+    printf("Ma SP: %s\nTen SP: %s\nDon Gia: %.2f\nNgay SX: %02d/%02d/%04d\nThoi Gian SD: %.2f\n",\
+           sp->maSanPham, sp->tenSanPham, sp->donGia,\
+           sp->ngaySanXuat.ngay, sp->ngaySanXuat.thang, sp->ngaySanXuat.nam,\
+           sp->thoiGianSuDung);
+}
+
+// Hàm hi?n th? danh sách s?n ph?m t? t?p
+void hienThiDanhSachSanPham(const char *tenTep) {
+    int soLuong;
+    SAN_PHAM *ds = docDanhSachSanPham(tenTep, &soLuong);
+
+    if (ds == NULL || soLuong <= 0) {
+        printf("Khong co san pham nao de hien thi.\n");
         return;
     }
 
-    SAN_PHAM sp;
+    for (int i = 0; i < soLuong; i++) {
+        printf("\nThong tin san pham thu %d:\n", i + 1);
+        hienThiSanPham(&ds[i]);
+    }
+
+    free(ds); // Gi?i phóng b? nh? sau khi dùng
+}
+
+// Hàm tìm ki?m s?n ph?m theo mã
+void timKiemSanPhamTheoMa(const char *tenTep, const char *maSP) {
+    int soLuong;
+    SAN_PHAM *ds = docDanhSachSanPham(tenTep, &soLuong);
+
+    if (ds == NULL || soLuong <= 0) {
+        printf("Khong co san pham nao de tim kiem.\n");
+        return;
+    }
+
     int timThay = 0;
-    while (fread(&sp, sizeof(SAN_PHAM), 1, file)) {
-        if (strcmp(sp.maSanPham, maSP) == 0) {
+    for (int i = 0; i < soLuong; i++) {
+        if (strcmp(ds[i].maSanPham, maSP) == 0) {
             printf("Thong tin san pham:\n");
-            hienThiSanPham(sp);
+            hienThiSanPham(&ds[i]);
             timThay = 1;
             break;
         }
@@ -62,13 +104,14 @@ void timKiemSanPhamTheoMa(const char *tenTep, const char *maSP) {
         printf("Khong tim thay san pham voi ma %s.\n", maSP);
     }
 
-    fclose(file);
+    free(ds); // Gi?i phóng b? nh? sau khi dùng
 }
 
 int main() {
     char tenTep[100];
-    printf("Nhap ten tep chua danh sach san pham: ");
+    printf("Nhap ten tep : ");
     scanf("%s", tenTep);
+
 
     printf("\nDanh sach san pham:\n");
     hienThiDanhSachSanPham(tenTep);
