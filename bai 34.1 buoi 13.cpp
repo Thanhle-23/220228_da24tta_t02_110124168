@@ -105,6 +105,24 @@ void docDanhSachSinhVienTuFile(sv **ds, int *n, const char *tenTep) {
 
     fclose(f);
 }
+void thongKeGioiTinhTheoLop(sv *ds, int n, lophoc *dsLop, int nLop) {
+    printf("\nThong ke so sinh vien nam, nu cua moi lop:\n");
+    for (int i = 0; i < nLop; i++) {
+        int nam = 0, nu = 0;
+        for (int j = 0; j < n; j++) {
+            if (strcmp(ds[j].lophoc.malop, dsLop[i].malop) == 0) {
+                if (strcmp(ds[j].gioitinh, "Nam") == 0) {
+                    nam++;
+                } else if (strcmp(ds[j].gioitinh, "Nu") == 0) {
+                    nu++;
+                }
+            }
+        }
+        printf("\nLop %s (%s):\n", dsLop[i].malop, dsLop[i].tenlop);
+        printf("  - So sinh vien nam: %d\n", nam);
+        printf("  - So sinh vien nu: %d\n", nu);
+    }
+}
 
 // Hàm thống kê danh sách sinh viên còn nợ môn học
 void thongKeNoMon(sv *ds, int n) {
