@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-// C?u tr˙c ng‡y th·ng
+// C?u tr√∫c ng√†y th√°ng
 struct NGAY_THANG {
     int ngay;
     int thang;
@@ -11,22 +11,22 @@ struct NGAY_THANG {
 
 typedef struct NGAY_THANG ngaysinh;
 
-// C?u tr˙c mÙn h?c
+// C?u tr√∫c m√¥n h?c
 struct MON_HOC {
     char mamon[10];
     float diem;
 };
 
-// C?u tr˙c l?p h?c
+// C?u tr√∫c l?p h?c
 struct LOP_HOC {
     char malop[10];
-    char tenlop[30];  // –„ tang kÌch thu?c t? 10 lÍn 30
+    char tenlop[30];  // √ê√£ tang k√≠ch thu?c t? 10 l√™n 30
     int siso;
 };
 
 typedef struct LOP_HOC lophoc;
 
-// C?u tr˙c sinh viÍn
+// C?u tr√∫c sinh vi√™n
 struct SINH_VIEN {
     char hoten[30];
     char diachi[100];
@@ -40,15 +40,15 @@ struct SINH_VIEN {
 
 typedef struct SINH_VIEN sv;
 
-// H‡m nh?p thÙng tin sinh viÍn
+// H√†m nh?p th√¥ng tin sinh vi√™n
 void nhap(SINH_VIEN *sv) {
-    // Nh?p h? tÍn
+    // Nh?p h? t√™n
     printf("\nNhap vao ho ten: ");
     fflush(stdin);
     fgets(sv->hoten, sizeof(sv->hoten), stdin);
-    sv->hoten[strcspn(sv->hoten, "\n")] = '\0'; // XÛa k˝ t? newline
+    sv->hoten[strcspn(sv->hoten, "\n")] = '\0'; // X√≥a k√Ω t? newline
 
-    // Nh?p m„ s? sinh viÍn
+    // Nh?p m√£ s? sinh vi√™n
     printf("\nHay cho biet mssv: ");
     scanf("%s", sv->mssv);
 
@@ -56,23 +56,23 @@ void nhap(SINH_VIEN *sv) {
     printf("\nNhap vao dia chi: ");
     fflush(stdin);
     fgets(sv->diachi, sizeof(sv->diachi), stdin);
-    sv->diachi[strcspn(sv->diachi, "\n")] = '\0'; // XÛa k˝ t? newline
+    sv->diachi[strcspn(sv->diachi, "\n")] = '\0'; // X√≥a k√Ω t? newline
 
-    // Nh?p gi?i tÌnh
+    // Nh?p gi?i t√≠nh
     printf("\nNhap vao gioi tinh: ");
     fflush(stdin);
     fgets(sv->gioitinh, sizeof(sv->gioitinh), stdin);
-    sv->gioitinh[strcspn(sv->gioitinh, "\n")] = '\0'; // XÛa k˝ t? newline
+    sv->gioitinh[strcspn(sv->gioitinh, "\n")] = '\0'; // X√≥a k√Ω t? newline
 
-    // Nh?p ng‡y sinh
+    // Nh?p ng√†y sinh
     printf("\nHay cho biet ngay sinh (ngay thang nam): ");
     scanf("%d %d %d", &sv->ngaysinh.ngay, &sv->ngaysinh.thang, &sv->ngaysinh.nam);
 
-    // Nh?p s? mÙn h?c
+    // Nh?p s? m√¥n h?c
     printf("\nNhap vao so mon hoc: ");
     scanf("%d", &sv->somon);
 
-    // Nh?p thÙng tin mÙn h?c
+    // Nh?p th√¥ng tin m√¥n h?c
     for (int i = 0; i < sv->somon; i++) {
         printf("Nhap ma mon hoc thu %d: ", i + 1);
         scanf("%s", sv->monhoc[i].mamon);
@@ -81,7 +81,7 @@ void nhap(SINH_VIEN *sv) {
     }
 }
 
-// H‡m nh?p thÙng tin danh s·ch sinh viÍn
+// H√†m nh?p th√¥ng tin danh s√°ch sinh vi√™n
 void nhapnsv(SINH_VIEN *ds, int n) {
     for (int i = 0; i < n; i++) {
         printf("\nNhap thong tin sinh vien thu %d: ", i + 1);
@@ -89,7 +89,7 @@ void nhapnsv(SINH_VIEN *ds, int n) {
     }
 }
 
-// H‡m nh?p thÙng tin l?p h?c
+// H√†m nh?p th√¥ng tin l?p h?c
 void nhapThongTinLop(lophoc *l) {
     printf("Nhap ma lop: ");
     scanf("%s", l->malop);
@@ -97,13 +97,13 @@ void nhapThongTinLop(lophoc *l) {
     printf("Nhap ten lop: ");
     fflush(stdin);
     fgets(l->tenlop, sizeof(l->tenlop), stdin);
-    l->tenlop[strcspn(l->tenlop, "\n")] = '\0'; // XÛa k˝ t? newline
+    l->tenlop[strcspn(l->tenlop, "\n")] = '\0'; // X√≥a k√Ω t? newline
 
     printf("Nhap si so: ");
     scanf("%d", &l->siso);
 }
 
-// H‡m ghi danh s·ch l?p v‡o file
+// H√†m ghi danh s√°ch l?p v√†o file
 void ghiDanhSachLopVaoFile(lophoc *ds, int n, const char *tenTep) {
     FILE *f = fopen(tenTep, "wb");
     if (f == NULL) {
@@ -119,7 +119,7 @@ void ghiDanhSachLopVaoFile(lophoc *ds, int n, const char *tenTep) {
     fclose(f);
 }
 
-// H‡m nh?p danh s·ch l?p h?c
+// H√†m nh?p danh s√°ch l?p h?c
 void nhapDanhSachLop(lophoc *ds, int n) {
     for (int i = 0; i < n; i++) {
         printf("\nNhap thong tin lop thu %d:\n", i + 1);
@@ -132,31 +132,36 @@ int main() {
     printf("Nhap so luong sinh vien: ");
     scanf("%d", &n);
 
-    // C?p ph·t b? nh? cho danh s·ch sinh viÍn
+    // C?p ph√°t b? nh? cho danh s√°ch sinh vi√™n
     SINH_VIEN *danh_sach = (SINH_VIEN *)malloc(n * sizeof(SINH_VIEN));
     if (danh_sach == NULL) {
         printf("Khong du bo nho\n");
         return 1;
     }
 
-    // Nh?p danh s·ch sinh viÍn
+    // Nh?p danh s√°ch sinh vi√™n
     nhapnsv(danh_sach, n);
 
-    // Nh?p tÍn t?p
+    // Nh?p t√™n t?p
     char tenTep[50];
     printf("\nNhap ten tep (vi du: phanso.dat): ");
     scanf("%s", tenTep);
 
-    // Nh?p v‡ ghi danh s·ch l?p v‡o file
-    lophoc dsLop[10];
+    // Nh?p v√† ghi danh s√°ch l?p v√†o file
     int nLop;
     printf("Nhap so lop: ");
     scanf("%d", &nLop);
+    // C·∫•p ph√°t b·ªô nh·ªõ ƒë·ªông cho danh s√°ch l·ªõp
+    lophoc *dsLop = (lophoc *)malloc(nLop * sizeof(lophoc));
+    if (dsLop == NULL) {
+        printf("Khong du bo nho de cap phat cho danh sach lop.\n");
+        return 1;
+    }
     nhapDanhSachLop(dsLop, nLop);
 
     ghiDanhSachLopVaoFile(dsLop, nLop, tenTep);
 
-    // Gi?i phÛng b? nh?
+    // Gi?i ph√≥ng b? nh?
     free(danh_sach);
 
     return 0;
