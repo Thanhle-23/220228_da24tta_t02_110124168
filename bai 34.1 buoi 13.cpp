@@ -82,6 +82,19 @@ void docDanhSachLopTuFile(lophoc **ds, int *n, const char *tenTep) {
 
     fclose(f);
 }
+void hienThiSinhVienCuaLop(sv *ds, int n, const char *maLop) {
+    printf("\nDanh sach sinh vien cua lop %s:\n", maLop);
+    int found = 0;
+    for (int i = 0; i < n; i++) {
+        if (strcmp(ds[i].lophoc.malop, maLop) == 0) {
+            hienThiSinhVien(&ds[i]);
+            found = 1;
+        }
+    }
+    if (!found) {
+        printf("Khong co sinh vien nao trong lop %s.\n", maLop);
+    }
+}
 
 // Hàm đọc danh sách sinh viên từ file
 void docDanhSachSinhVienTuFile(sv **ds, int *n, const char *tenTep) {
