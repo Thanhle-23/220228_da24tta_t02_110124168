@@ -106,18 +106,34 @@ void docDanhSachSinhVienTuFile(sv **ds, int *n, const char *tenTep) {
     fclose(f);
 }
 
-// Hàm hiển thị danh sách sinh viên của lớp theo mã lớp
-void hienThiSinhVienCuaLop(sv *ds, int n, char *maLop) {
-    printf("\nDanh sach sinh vien cua lop %s:\n", maLop);
+// Hàm thống kê danh sách sinh viên còn nợ môn học
+void thongKeNoMon(sv *ds, int n) {
+    printf("\nDanh sach sinh vien con no mon hoc (diem < 5):\n");
     int found = 0;
     for (int i = 0; i < n; i++) {
-        if (strcmp(ds[i].lophoc.malop, maLop) == 0) {
-            hienThiSinhVien(&ds[i]);
+        int soMonNo = 0;
+        for (int j = 0; j < ds[i].somon; j++) {
+            if (ds[i].monhoc[j].diem < 5) {
+                soMonNo++;
+            }
+        }
+
+        if (soMonNo > 0) {
             found = 1;
+            printf("\nSinh vien: %s (MSSV: %s)", ds[i].hoten, ds[i].mssv);
+            printf("\nSo mon no: %d", soMonNo);
+            printf("\nDanh sach mon no:");
+            for (int j = 0; j < ds[i].somon; j++) {
+                if (ds[i].monhoc[j].diem < 5) {
+                    printf("\n  - Mon: %s, Diem: %.2f", ds[i].monhoc[j].mamon, ds[i].monhoc[j].diem);
+                }
+            }
+            printf("\n");
         }
     }
+
     if (!found) {
-        printf("\nKhong co sinh vien trong lop %s.", maLop);
+        printf("\nKhong co sinh vien nao con no mon hoc.");
     }
 }
 
@@ -141,6 +157,12 @@ int main() {
     for (int i = 0; i < nLop; i++) {
         hienThiLopHoc(&dsLop[i]);
     }
+
+    // Thống kê số sinh viên nam, nữ của mỗi lớp
+    thongKeGioiTinhTheoLop(dsSinhVien, n, dsLop, nLop);
+
+    // Thống kê danh sách sinh viên còn nợ môn
+    thongKeNoMon(dsSinhVien, n);
 
     // Nhập mã lớp cần tìm
     printf("\nNhap ma lop can tim: ");
